@@ -15,6 +15,7 @@
  */
 package com.example.androiddevchallenge
 
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.setContent
@@ -22,11 +23,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,9 +56,11 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
 import com.example.androiddevchallenge.ui.theme.MyTheme
-
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +84,7 @@ data class Friend(
     val image: Int,
     val age: String,
     val location: String,
-    val isMale : Boolean,
+    val isMale: Boolean,
     val backgroundColor: Color,
     val secondaryColor: Color
 )
@@ -160,15 +175,16 @@ fun ListScreen(navController: NavController) {
                     }
                     AnimalCard(
                         modifier = Modifier.background(backColor)
-                            .clickable(onClick = {
-                                navController.navigate(route = "detailScreen")
-                            }),
+                            .clickable(
+                                onClick = {
+                                    navController.navigate(route = "detailScreen")
+                                }
+                            ),
                         item
                     )
                 }
             }
         }
-
     }
 }
 
@@ -210,7 +226,8 @@ fun AnimalCard(modifier: Modifier, friend: Friend) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = friend.name, style = TextStyle(
+                        text = friend.name,
+                        style = TextStyle(
                             color = Color(0xFFE7F4F0),
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold
@@ -218,11 +235,15 @@ fun AnimalCard(modifier: Modifier, friend: Friend) {
                     )
                 }
 
-                Text(text = friend.type, style = TextStyle(
-                    color = Color(0xCCE7F4F0),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
-                ), modifier = Modifier.padding(start = 2.dp))
+                Text(
+                    text = friend.type,
+                    style = TextStyle(
+                        color = Color(0xCCE7F4F0),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    ),
+                    modifier = Modifier.padding(start = 2.dp)
+                )
 
                 Row(
                     modifier = Modifier.padding(top = 4.dp),
@@ -235,7 +256,8 @@ fun AnimalCard(modifier: Modifier, friend: Friend) {
                     ) {
                         Text(
                             modifier = Modifier.padding(4.dp),
-                            text = friend.age, style = TextStyle(
+                            text = friend.age,
+                            style = TextStyle(
                                 color = Color(0xCCE7F4F0),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold
@@ -250,7 +272,8 @@ fun AnimalCard(modifier: Modifier, friend: Friend) {
                     ) {
                         Text(
                             modifier = Modifier.padding(4.dp),
-                            text = friend.location, style = TextStyle(
+                            text = friend.location,
+                            style = TextStyle(
                                 color = Color(0xCCE7F4F0),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold
@@ -275,7 +298,6 @@ fun AnimalCard(modifier: Modifier, friend: Friend) {
                                 .padding(4.dp)
                         )
                     }
-
                 }
             }
         }
@@ -313,40 +335,55 @@ fun DetailScreen() {
 
         val (heartIcon, animalImage, title, contact, desc, adopt) = createRefs()
 
-        HeartIcon(Modifier.constrainAs(heartIcon) {
-            top.linkTo(parent.top, margin = 16.dp)
-            start.linkTo(parent.start, margin = 8.dp)
-        })
+        HeartIcon(
+            Modifier.constrainAs(heartIcon) {
+                top.linkTo(parent.top, margin = 16.dp)
+                start.linkTo(parent.start, margin = 8.dp)
+            }
+        )
 
-        AnimalImage(Modifier.constrainAs(animalImage) {
-            top.linkTo(parent.top)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            bottom.linkTo(parent.bottom)
-        }, friend.image)
+        AnimalImage(
+            Modifier.constrainAs(animalImage) {
+                top.linkTo(parent.top)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom)
+            },
+            friend.image
+        )
 
-        AnimalTitle(Modifier.constrainAs(title) {
-            top.linkTo(animalImage.bottom)
-            start.linkTo(parent.start)
-        }, friend.name, friend.type)
+        AnimalTitle(
+            Modifier.constrainAs(title) {
+                top.linkTo(animalImage.bottom)
+                start.linkTo(parent.start)
+            },
+            friend.name, friend.type
+        )
 
-        ContactInformation(Modifier.constrainAs(contact) {
-            top.linkTo(title.top)
-            bottom.linkTo(title.bottom)
-            end.linkTo(parent.end)
-        }, Color(0xFF86c9b4))
+        ContactInformation(
+            Modifier.constrainAs(contact) {
+                top.linkTo(title.top)
+                bottom.linkTo(title.bottom)
+                end.linkTo(parent.end)
+            },
+            Color(0xFF86c9b4)
+        )
 
-        AnimalDesc(Modifier.constrainAs(desc) {
-            top.linkTo(title.bottom, margin = 8.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        })
+        AnimalDesc(
+            Modifier.constrainAs(desc) {
+                top.linkTo(title.bottom, margin = 8.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+        )
 
-        AdoptButton(Modifier.constrainAs(adopt) {
-            bottom.linkTo(parent.bottom, margin = 16.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        })
+        AdoptButton(
+            Modifier.constrainAs(adopt) {
+                bottom.linkTo(parent.bottom, margin = 16.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+        )
     }
 }
 
@@ -383,37 +420,40 @@ fun AnimalImage(modifier: Modifier, image: Int) {
 
 @Composable
 fun AdoptButton(modifier: Modifier) {
-        Surface(
-            color = Color(0xFF86c9b4),
-            elevation = 2.dp,
-            shape = RoundedCornerShape(size = 12.dp),
-            modifier = modifier
-                .fillMaxWidth()
-                .height(height = 48.dp)
-                .padding(horizontal = 16.dp)
+    Surface(
+        color = Color(0xFF86c9b4),
+        elevation = 2.dp,
+        shape = RoundedCornerShape(size = 12.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(height = 48.dp)
+            .padding(horizontal = 16.dp)
 
-        ) {
-            Box {
-                Text(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = "ADOPT",
-                    color = Color(0xFFE7F4F0),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
-                )
-            }
+    ) {
+        Box {
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = "ADOPT",
+                color = Color(0xFFE7F4F0),
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            )
         }
+    }
 }
 
 @Composable
 fun AnimalDesc(modifier: Modifier) {
-    Text(text =
-    "He is very happy and he always runs. He likes catching balls and no worries that he is going to get it soon or later."
-        , style = TextStyle(
+    Text(
+        text =
+        "He is very happy and he always runs. He likes catching balls and no worries that he is going to get it soon or later.",
+        style = TextStyle(
             color = Color(0xCCE7F4F0),
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
-        ), modifier = modifier.padding(start = 16.dp))
+        ),
+        modifier = modifier.padding(start = 16.dp)
+    )
 }
 
 @Composable
@@ -442,7 +482,6 @@ fun ContactInformation(modifier: Modifier, backgroundColor: Color) {
                     .padding(4.dp)
                     .padding(end = 8.dp)
             )
-
         }
     }
 }
@@ -453,7 +492,8 @@ fun AnimalTitle(modifier: Modifier, name: String, type: String) {
         modifier = modifier.padding(start = 16.dp)
     ) {
         Text(
-            text = name, style = TextStyle(
+            text = name,
+            style = TextStyle(
                 color = Color(0xFFE7F4F0),
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold
@@ -461,13 +501,13 @@ fun AnimalTitle(modifier: Modifier, name: String, type: String) {
         )
 
         Text(
-            text = type, style = TextStyle(
+            text = type,
+            style = TextStyle(
                 color = Color(0xFFE7F4F0),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
         )
-
     }
 }
 
