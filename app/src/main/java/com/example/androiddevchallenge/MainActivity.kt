@@ -15,7 +15,6 @@
  */
 package com.example.androiddevchallenge
 
-import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.setContent
@@ -174,7 +173,8 @@ fun ListScreen(navController: NavController) {
                         list[index - 1].backgroundColor
                     }
                     AnimalCard(
-                        modifier = Modifier.background(backColor)
+                        modifier = Modifier
+                            .background(backColor)
                             .clickable(
                                 onClick = {
                                     navController.navigate(route = "detailScreen")
